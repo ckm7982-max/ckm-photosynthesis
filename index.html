@@ -51,7 +51,7 @@ textarea{min-height:100px;resize:vertical}.btnrow{display:flex;justify-content:f
 table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:11px 9px;border-bottom:1px solid #20392f;text-align:left}th{color:#86a298;font-size:11px;letter-spacing:.08em}
 canvas{width:100%;height:300px;background:#07130f;border:1px solid #203d31;border-radius:14px}
 .report p{line-height:1.8;color:#c0d2cb}.quote{border-left:3px solid var(--green);padding:12px 16px;background:#0a1b15;border-radius:0 10px 10px 0}
-.toast{position:fixed;bottom:22px;right:22px;background:#102b20;border:1px solid #3a7359;padding:12px 15px;border-radius:12px;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none}.toast.show{opacity:1;transform:none}
+.toast{position:fixed;bottom:22px;right:22px;background:#102b20;border:1px solid #3a7359;padding:12px 15px;border-radius:12px;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none;z-index:9999}.toast.show{opacity:1;transform:none}
 
 .paper-wrap{max-width:980px;margin:auto}
 .paper{background:#f7f5ef;color:#1d2723;border-radius:4px;box-shadow:0 25px 70px rgba(0,0,0,.35);padding:70px 82px;min-height:1100px;font-family:Georgia,"Noto Serif KR",serif}
@@ -66,39 +66,25 @@ canvas{width:100%;height:300px;background:#07130f;border:1px solid #203d31;borde
 .grid-paper-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.grid-paper-mini div{border:1px solid #d2d0c7;background:#efeee8;padding:14px}.grid-paper-mini span{display:block;font:10px Inter,system-ui,sans-serif;color:#707870;margin-bottom:6px}.grid-paper-mini strong{font:700 14px Inter,system-ui,sans-serif}
 .paper-foot{border-top:1px solid #cbc9c0;margin-top:45px;padding-top:14px;display:flex;justify-content:space-between;font:10px Inter,system-ui,sans-serif;color:#7b827c}.report-actions{display:flex;justify-content:center;gap:10px;margin:18px 0 35px}
 
-@media print{
-  body{background:white!important}.app{padding:0}.top,.side,.sectionTitle,.report-actions{display:none!important}.layout{display:block}.screen{display:none!important}.screen#s8{display:block!important}.paper{box-shadow:none;border-radius:0;padding:18mm 16mm;min-height:auto;width:100%;color:#111}.paper canvas{break-inside:avoid}.paper-section{break-inside:auto}.paper-head{break-after:avoid}.paper-foot{margin-top:20mm}
-}
 /* 모바일 반응형 레이아웃 스타일 개선 */
 @media (max-width: 768px) {
-  /* 전체 여백 줄이기 */
   .app { padding: 10px; }
-  
-  /* 헤더 높이 및 여백 조정 */
   .top { height: auto; padding: 12px 15px; flex-direction: column; gap: 8px; text-align: center; }
-  
-  /* 메인 레이아웃: 사이드바와 본문을 1열로 변경 */
   .layout { grid-template-columns: 1fr; margin-top: 12px; }
   .side { position: static; min-height: auto; }
-  
-  /* 모든 카드 grid 레이아웃을 1열로 단축 */
   .grid2, .grid3, .grid-paper-mini { grid-template-columns: 1fr !important; }
-  
-  /* 히어로 영역 텍스트 및 패딩 줄이기 */
   .hero { padding: 25px 20px; }
   .hero h1 { font-size: 32px; }
-  
-  /* 버튼 배치 반응형 처리 */
   .btnrow { flex-direction: column; }
   .btn { width: 100%; text-align: center; }
-  
-  /* 보고서(Paper) 종이 모바일 맞춤 조정 */
   .paper-wrap { width: 100%; }
   .paper { padding: 25px 18px; min-height: auto; }
   .paper h1 { font-size: 24px; }
-  
-  /* 모바일 화면에서 Canvas 차트 가로 잘림 방지 */
   canvas, .paper canvas { width: 100% !important; height: auto !important; }
+}
+
+@media print{
+  body{background:white!important}.app{padding:0}.top,.side,.sectionTitle,.report-actions{display:none!important}.layout{display:block}.screen{display:none!important}.screen#s8{display:block!important}.paper{box-shadow:none;border-radius:0;padding:18mm 16mm;min-height:auto;width:100%;color:#111}.paper canvas{break-inside:avoid}.paper-section{break-inside:auto}.paper-head{break-after:avoid}.paper-foot{margin-top:20mm}
 }
 </style>
 </head>
@@ -356,7 +342,11 @@ function go(n) {
   if (n === 9) {
     finishReport();
   }
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  
+  // 새로 활성화된 스크린 위치로 부드럽게 스크롤 이동
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function toast(t) {
